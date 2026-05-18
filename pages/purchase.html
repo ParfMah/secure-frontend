@@ -36,7 +36,7 @@
         linear-gradient(90deg,rgba(201,162,39,0.04)1px,transparent 1px);
       background-size:60px 60px;
     }
-    .purchase-hero .inner{position:relative;max-width:1200px;margin:0 auto;padding:0 24px}
+    .purchase-hero .inner{position:relative;max-width:100%;margin:0 auto;padding:0 16px}
 
     /* ── Stepper ── */
     .step-nav{
@@ -102,8 +102,9 @@
     .dep-label{font-size:13px;color:rgba(255,255,255,0.55)}
     .dep-value{font-family:'JetBrains Mono',monospace;font-size:16px;font-weight:800;color:var(--color-gold)}
     .dep-slider{
-      width:100%;accent-color:var(--color-gold);
+      width:100%;max-width:100%;accent-color:var(--color-gold);
       height:4px;margin-bottom:8px;cursor:pointer;
+      box-sizing:border-box;
     }
     .dep-ticks{display:flex;justify-content:space-between;font-size:11px;color:rgba(255,255,255,0.22);margin-bottom:14px}
 
@@ -118,9 +119,10 @@
     /* Upload */
     .upload-zone{
       border:2px dashed rgba(201,162,39,0.25);border-radius:14px;
-      padding:24px 16px;text-align:center;cursor:pointer;
+      padding:20px 12px;text-align:center;cursor:pointer;
       transition:all .2s;background:rgba(201,162,39,0.03);
       display:flex;flex-direction:column;align-items:center;gap:8px;
+      width:100%;box-sizing:border-box;
     }
     .upload-zone:hover{border-color:rgba(201,162,39,0.5);background:rgba(201,162,39,0.06)}
     .upload-file-name{font-size:12px;color:var(--color-gold);margin-top:4px;display:none}
@@ -246,23 +248,111 @@
     }
 
     /* ── Responsive mobile ── */
+    /* ── RESET GLOBAL ANTI-OVERFLOW ── */
+    html,body{max-width:100%;overflow-x:hidden}
+    .purchase-wrap,.mobile-recap-band,.step-nav,
+    .form-section,.nav-btns,.mrb-row,
+    .upload-zone,.cgu-item,.fraud-alert{
+      max-width:100%;box-sizing:border-box;
+      overflow-x:hidden;
+    }
+    .form-control{max-width:100%;min-width:0;box-sizing:border-box;width:100%}
+    /* Tous les enfants directs du form-section ne débordent pas */
+    .form-section > *{max-width:100%;box-sizing:border-box}
+
     @media(max-width:900px){
       .purchase-wrap{
-        grid-template-columns:1fr;
-        gap:0;padding:16px 16px 80px;
+        grid-template-columns:1fr !important;
+        gap:0 !important;
+        padding:12px 12px 80px !important;
+        width:100% !important;
+        overflow-x:hidden !important;
       }
-      .recap-box{position:static;display:none} /* caché sur mobile, remplacé par la bande */
+      .recap-box{position:static;display:none}
       .mobile-recap-band{display:block}
-      .form-grid-2{grid-template-columns:1fr}
-      .step-nav-item{font-size:11px;padding:8px 4px}
-      .step-num{width:16px;height:16px;font-size:9px}
+      .form-grid-2{grid-template-columns:1fr !important}
+
+      /* Bande récap mobile : prix fluid */
+      .mobile-recap-band{
+        padding:12px 14px !important;
+        overflow:hidden !important;
+      }
+      .mrb-row{
+        display:grid !important;
+        grid-template-columns:1fr auto !important;
+        gap:8px 12px !important;
+        align-items:start !important;
+        overflow:hidden !important;
+      }
+      .mrb-name{
+        font-size:clamp(12px,3.5vw,15px) !important;
+        word-break:break-word !important;
+        min-width:0 !important;
+      }
+      .mrb-price{
+        font-size:clamp(14px,4vw,18px) !important;
+        white-space:nowrap !important;
+        text-align:right !important;
+      }
+      .mrb-detail{font-size:11px !important}
+
+      /* Ligne acompte mobile */
+      .mobile-recap-band>div:last-child{
+        grid-column:1/-1 !important;
+        display:flex !important;
+        justify-content:space-between !important;
+        align-items:center !important;
+        border-top:1px solid rgba(201,162,39,0.15) !important;
+        padding-top:8px !important;
+        margin-top:4px !important;
+      }
+
+      /* Stepper : scrollable + labels courts */
+      .step-nav{
+        overflow-x:auto !important;
+        overflow-y:hidden !important;
+        scrollbar-width:none !important;
+        -ms-overflow-style:none !important;
+        padding:3px !important;
+        gap:2px !important;
+        flex-wrap:nowrap !important;
+      }
+      .step-nav::-webkit-scrollbar{display:none}
+      .step-nav-item{
+        flex:0 0 auto !important;
+        font-size:11px !important;
+        padding:8px 10px !important;
+        white-space:nowrap !important;
+        min-width:max-content !important;
+      }
+      .step-num{width:18px;height:18px;font-size:10px}
+
+      /* Formulaire */
+      .form-section{padding:14px 12px !important}
+      .form-section-title{font-size:14px !important}
+      .form-label{font-size:12px !important}
+      .form-control{
+        font-size:16px !important; /* évite zoom iOS */
+        padding:10px 12px !important;
+        width:100% !important;
+        min-width:0 !important;
+      }
+      .dep-ticks{font-size:10px !important}
+
+      /* Boutons */
+      .btn-next-full{font-size:14px !important;padding:14px !important}
+      .nav-btns{flex-direction:column !important;gap:8px !important}
+      .btn-prev,.btn-next{flex:none !important;width:100% !important}
     }
-    @media(max-width:480px){
-      .purchase-hero{padding:72px 0 20px}
-      .form-section{padding:16px}
-      .form-control{font-size:16px} /* évite zoom iOS */
-      .nav-btns{flex-direction:column}
-      .btn-prev{flex:none}
+
+    @media(max-width:400px){
+      .purchase-wrap{padding:8px 8px 60px !important}
+      .purchase-hero .inner{padding:0 12px !important}
+      /* Stepper : cacher les labels, garder seulement numéros + icône active */
+      .step-nav-item span{display:none !important}
+      .step-nav-item.active span{display:inline !important;font-size:10px !important}
+      .step-nav-item{padding:8px 8px !important;min-width:auto !important}
+      .mrb-price{font-size:13px !important}
     }
   </style>
 </head>
@@ -328,18 +418,18 @@
     <!-- Bande récap mobile (affichée uniquement sur mobile) -->
     <div class="mobile-recap-band">
       <div class="mrb-row">
-        <div>
+        <div style="min-width:0;overflow:hidden">
           <div class="mrb-name" id="mrb-name">—</div>
-          <div class="mrb-detail">Ref. <span id="mrb-ref">—</span></div>
+          <div class="mrb-detail">Réf. <span id="mrb-ref">—</span></div>
         </div>
-        <div style="text-align:right">
-          <div style="font-size:11px;color:rgba(255,255,255,0.35);margin-bottom:2px">Prix total</div>
+        <div style="text-align:right;flex-shrink:0;min-width:0">
+          <div style="font-size:10px;color:rgba(255,255,255,0.35);margin-bottom:2px">Prix total</div>
           <div class="mrb-price" id="mrb-price">—</div>
         </div>
       </div>
-      <div style="margin-top:10px;padding-top:10px;border-top:1px solid rgba(201,162,39,0.15);display:flex;justify-content:space-between;flex-wrap:wrap;gap:8px">
-        <span style="font-size:12px;color:rgba(255,255,255,0.40)">Acompte (<span id="mrb-pct">50%</span>)</span>
-        <span style="font-family:'JetBrains Mono',monospace;font-size:13px;font-weight:700;color:var(--color-gold)" id="mrb-dep">—</span>
+      <div style="display:flex;justify-content:space-between;align-items:center;flex-wrap:wrap;gap:6px;padding-top:8px;border-top:1px solid rgba(201,162,39,0.15);margin-top:8px">
+        <span style="font-size:12px;color:rgba(255,255,255,0.40)">Acompte&nbsp;(<span id="mrb-pct">50%</span>)</span>
+        <span style="font-size:13px;font-weight:700;color:var(--color-gold)" id="mrb-dep">—</span>
       </div>
     </div>
 
